@@ -9,7 +9,7 @@ class LineGraph extends Component {
             pred: []
         };
         this.url = "https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=480";
-        this.predurl = 'http://localhost:5000/predict'
+        this.predurl = 'http://127.0.0.1:5000/predict'
     }
 
     async componentDidMount() {

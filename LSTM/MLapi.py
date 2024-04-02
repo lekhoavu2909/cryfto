@@ -27,6 +27,7 @@ def predict():
         json_data = flask.request.get_json()
         if json_data:
             try:
+                print(json_data)
                 df = pd.DataFrame.from_dict(json_data)
                 close_prices = df['data'].values
                 scaled_close = scale_value(scaler, close_prices)
