@@ -55,8 +55,6 @@ class LineGraph extends Component {
 
     render() {
         const { data,pred } = this.state;
-        console.log(data)
-        console.log(pred)
 
         const margin = { top: 20, right: 20, bottom: 30, left: 50 };
         const width = 960 - margin.left - margin.right;
@@ -73,7 +71,7 @@ class LineGraph extends Component {
             .y(d => y(d.close));
         const temp = data.concat(pred)
         x.domain(d3.extent(temp, d => d.time));
-        y.domain([d3.min(temp, d => d.close)-100, d3.max(temp, d => d.close)]);
+        y.domain([d3.min(temp, d => d.close)-100, d3.max(temp, d => d.close)+100]);
         
         // Define gridlines
         const xAxisGrid = d3.axisBottom(x)
@@ -98,7 +96,7 @@ class LineGraph extends Component {
                         .selectAll("path, line")
                         .style("stroke", "white")}></g>
                     <path fill="none" stroke="#73fff8" strokeWidth="2" d={line(data)} />
-                    <path fill="none" stroke="white" strokeWidth="2" d={line(pred)} />
+                    <path fill="none" stroke="red" strokeWidth="2" d={line(pred)} />
                 </g>
             </svg>
         );

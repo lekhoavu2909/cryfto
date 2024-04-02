@@ -1,5 +1,6 @@
 import { Box, useMediaQuery } from "@mui/material";
 import LineGraph from "./LineGraph";
+import BuySellComponent from "./BuySellComponent";
 
 const gridTemplateLargeScreens = `
   "a b c"
@@ -68,8 +69,12 @@ const Dashboard = () => {
             }
       }
     >
-
-      <LineGraph />
+      <Box sx={{ gridArea: "a" }} >
+        <LineGraph />
+      </Box>
+      <Box sx={{ gridArea: "f" }} >
+        <BuySellComponent  />
+      </Box>
     </Box>
   );
 };

@@ -1,7 +1,18 @@
-function Predictions () {
+import { Box } from "@mui/material";
+import PredictionsGraph from "./PredictionsGraph";
+
+
+const Predictions = () => {
     return(
         <div className="Predictions">
-            <h1>Predictions</h1>
+            <Box
+      width="100%"
+      height="100%"
+      display="grid"
+      gap="1.5rem"
+    >
+        <PredictionsGraph />
+    </Box>
         </div>
     )
 }
