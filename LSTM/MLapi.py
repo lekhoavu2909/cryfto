@@ -16,8 +16,13 @@ def load_scaler():
     global scaler
     scaler = joblib.load('scaler.gz')
 
-def prepare_predict(close_price):
-    return close_price
+def preprocess_input(data):
+    features = ['Close', 'Adj Close', 'Volume', 'Open', 'High', 'Low', 'Close Future']
+    data_df = pd.DataFrame(data)
+    data_df = data_df[features].dropna()
+    scaled_data = scaler.transform(data_df)
+    
+    return scaled_data
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -27,16 +32,19 @@ def predict():
         json_data = flask.request.get_json()
         if json_data:
             try:
-                print(json_data)
-                df = pd.DataFrame.from_dict(json_data)
-                close_prices = df['data'].values
-                scaled_close = scale_value(scaler, close_prices)
-                sequences = to_sequences(scaled_close, len(df) // 2)
+                input_data = json_data.get('data')
+                scaled_input = preprocess_input(input_data)
+                
+                sequences = np.array([scaled_input])
 
-                # Batch prediction requests
                 res = requests.post(url, json={"instances": sequences.tolist()})
-                res.raise_for_status()  # Raise HTTPError for unsuccessful responses
-                predictions = scaler.inverse_transform(res.json()['predictions']).tolist()
+                res.raise_for_status()  # Check for unsuccessful responses
+                
+                predictions = res.json().get('predictions')
+                inverse_transformed_predictions = scaler.inverse_transform(predictions)
+                
+                response["success"] = True
+                response["predictions"] = inverse_transformed_predictions.tolist()
 
                 data['prediction'] = predictions
                 data["success"] = True
