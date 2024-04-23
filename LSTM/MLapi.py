@@ -7,6 +7,7 @@ import pandas as pd
 import requests
 
 app = flask.Flask(__name__)
+app.debug = True
 CORS(app)
 model = None
 scaler = None
@@ -17,7 +18,7 @@ def load_scaler():
     scaler = joblib.load('scaler.gz')
 
 def preprocess_input(data):
-    features = ['Close', 'Adj Close', 'Volume', 'Open', 'High', 'Low', 'Close Future']
+    features = ['Close', 'Adj Close', 'Volume', 'Open', 'High', 'Low']
     data_df = pd.DataFrame(data)
     data_df = data_df[features].dropna()
     scaled_data = scaler.transform(data_df)
