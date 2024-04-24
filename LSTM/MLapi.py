@@ -1,15 +1,11 @@
-from utils import scale_value, to_sequences
-import numpy as np
 import flask
 from flask_cors import CORS
 import joblib
 import pandas as pd
 import requests
-import codecs, json 
-from json import JSONEncoder
 
 app = flask.Flask(__name__)
-app.debug = True
+# app.debug = True
 CORS(app)
 model = None
 scaler = None
@@ -29,11 +25,9 @@ def preprocess_input(data):
 
     return scaled_data
 
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, numpy.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
+@app.route('/')
+def home():
+    return flask.jsonify({"message": "Hello, World!"})
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -71,9 +65,11 @@ def predict():
     else:
         data['error'] = "Invalid HTTP method"
 
-    return flask.jsonify(data)
+    if not data['success']:
+        return flask.jsonify(data), 500
+    return flask.jsonify(data), 200
 
 if __name__ == "__main__":
     print("* Loading Keras model and starting Flask server. Please wait...")
     load_scaler()
-    app.run()
+    app.run(host='0.0.0.0')
